@@ -1,17 +1,19 @@
-CREATE SCHEMA `sample_schema` ;
+-- Create the database schema
+CREATE SCHEMA IF NOT EXISTS `user_db`;
 
-USE `sample_schema`;
+-- Select the schema for use
+USE `user_db`;
 
-CREATE TABLE `sample_collection` (
-  `sample_collection_id` int NOT NULL AUTO_INCREMENT,
-  `sample_collection_name` blob,
-  `sample_collection_created_on` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `sample_collection_created_by` varchar(100) NOT NULL,
-  `sample_collection_updated_on` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `sample_collection_updated_by` varchar(100) NOT NULL,
-  PRIMARY KEY (`sample_collection_id`)
+-- Create the users table
+CREATE TABLE IF NOT EXISTS user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    address VARCHAR(250) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-LOCK TABLES `sample_collection` WRITE;
-INSERT INTO `sample_collection` VALUES (1,_binary 'Collection 1','2024-07-03 10:19:09.236415','user@wso2.com','2024-07-03 10:19:09.236415','user@wso2.com@wso2.com'),(2,_binary 'Collection 2','2024-07-03 10:19:09.238862','user@wso2.com','2024-07-03 10:19:09.238862','user@wso2.com'),(3,_binary 'Collection 3','2024-07-03 10:19:09.239927','user@wso2.com','2024-07-03 10:19:09.239927','user@wso2.com'),(4,_binary 'Collection 4','2024-07-03 10:19:09.241920','user@wso2.com','2024-07-03 10:19:09.241920','user@wso2.com'),(5,_binary 'Collection 5','2024-07-03 10:19:09.243051','user@wso2.com','2024-07-03 10:19:09.243051','user@wso2.com');
-UNLOCK TABLES;
+-- Optional: Insert initial user data (example only)
+INSERT INTO user (name, email, address)
+VALUES ("John Smith", "john@gmail.com", "23 Colobo 3");

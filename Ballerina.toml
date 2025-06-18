@@ -1,8 +1,8 @@
 [package]
-org = "wso2"
-name = "sample_app"
-version = "1.0.0"
-distribution = "2201.8.4"
+org = "nimashag"
+name = "ballerina_crud_application"
+version = "0.1.0"
+distribution = "2201.10.2"
 
 [build-options]
 observabilityIncluded = true

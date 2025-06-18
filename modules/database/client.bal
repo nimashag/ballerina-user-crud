@@ -4,25 +4,29 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
-import ballerinax/java.jdbc;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
+type DatabaseConfig record {|
+    # User of the database
+    string user;
+    # Password of the database
+    string password;
+    # Name of the database
+    string database;
+    # Host of the database
+    string host;
+    # Port
+    int port;
+|};
+
 # Database Client Configuration.
-configurable DatabaseConfig databaseConfig = ?;
+configurable DatabaseConfig dbConfig = ?;
 
-DatabaseClientConfig databaseClientConfig = {
-    ...databaseConfig,
-    options: {
-        ssl: {
-            mode: mysql:SSL_REQUIRED
-        },
-        connectTimeout: 10
-    }
-};
-
-function initSampleDbClient() returns mysql:Client|error
-=> new (...databaseClientConfig);
-
-# Database Client.
-final jdbc:Client databaseClient = check initSampleDbClient();
+final mysql:Client dbClient = check new (
+    user = dbConfig.user,
+    password = dbConfig.password,
+    database = dbConfig.database,
+    host = dbConfig.host,
+    port = dbConfig.port
+);
