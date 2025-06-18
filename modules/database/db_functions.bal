@@ -34,3 +34,14 @@ public isolated function deleteUser(int userId) returns sql:ExecutionResult|sql:
 public isolated function updateUser(int userId, UserUpdate payload) returns sql:ExecutionResult|sql:Error {
     return dbClient->execute(updateUserQuery(userId, payload));
 }
+
+public isolated function searchUserByName(string name) returns User[]|sql:Error {
+    stream<User, sql:Error?> resultStream = dbClient->query(searchUserByNameQuery(name));
+
+    if resultStream is stream<User> {
+        return from User user in resultStream
+            select user;
+    }
+
+    return error("Error searching users by name");
+}

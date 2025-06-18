@@ -62,4 +62,17 @@ service / on new http:Listener(9090) {
 
     return http:NO_CONTENT;
     }
+
+    resource function get users/search(@http:Query string name) returns database:User[]|http:InternalServerError {
+    database:User[]|error response = database:searchUserByName(name);
+
+    if response is error {
+        return <http:InternalServerError>{
+            body: "Error while searching user by name"
+        };
+    }
+
+    return response;
+    }
+
 }

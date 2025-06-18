@@ -46,3 +46,15 @@ isolated function updateUserQuery(int userId, UserUpdate payload) returns sql:Pa
             address = COALESCE(${payload.address}, address)
         WHERE id = ${userId}
 `;
+
+isolated function searchUserByNameQuery(string name) returns sql:ParameterizedQuery => `
+    SELECT 
+        id,
+        name,
+        email,
+        address
+    FROM 
+        user
+    WHERE
+        name LIKE ${"%"+name+"%"}
+`;
