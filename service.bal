@@ -75,4 +75,22 @@ service / on new http:Listener(9090) {
     return response;
     }
 
+    resource function get users/[int id]() returns database:User|http:NotFound|http:InternalServerError {
+    database:User|error response = database:getUserById(id);
+
+    if response is error {
+        if response.message() == "User not found" {
+            return <http:NotFound>{
+                body: "User not found"
+            };
+        }
+        return <http:InternalServerError>{
+            body: "Error retrieving user"
+        };
+    }
+
+    return response;
+}
+
+
 }

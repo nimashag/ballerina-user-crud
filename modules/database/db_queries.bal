@@ -58,3 +58,15 @@ isolated function searchUserByNameQuery(string name) returns sql:ParameterizedQu
     WHERE
         name LIKE ${"%"+name+"%"}
 `;
+
+isolated function getUserByIdQuery(int id) returns sql:ParameterizedQuery => `
+    SELECT 
+        id,
+        name,
+        email,
+        address
+    FROM 
+        user
+    WHERE
+        id = ${id}
+`;
