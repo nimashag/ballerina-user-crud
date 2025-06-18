@@ -1,252 +1,89 @@
-# Internal App Backend
+# Ballerina CRUD User Management API
 
-## Version: 1
+A RESTful CRUD API built using [Ballerina](https://ballerina.io/) and MySQL for managing users.  
+It supports basic Create, Read, Update, Delete operations, along with search and retrieval by ID.
 
-### /user\-info
+---
 
-#### GET
+## Features
 
-##### Summary:
+- Get all users
+- Get a single user by ID
+- Search users by name
+- Create a new user
+- Update an existing user
+- Delete a user
 
-Retrieve the logged in user's details.
+---
 
-##### Parameters
+## Prerequisites
 
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ------ |
-| -    | -          | -           | -        | -      |
+- [Ballerina](https://ballerina.io/downloads/) 2201.8.0 or later
+- MySQL Server installed and running
+- MySQL Workbench (optional, for DB UI)
+- VS Code with Ballerina plugin
 
-##### Responses
+---
 
-<table>
-  <thead>
-    <tr>
-      <th>Code</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td> 200 </td><td> Ok <br/>
-  
-  ```json
-  {
-    "employeeId": "LK01",
-    "workEmail": "user@wso2.com",
-    "firstName": "Jon",
-    "lastName": "Smith",
-    "jobRole": "Software Engineer",
-    "employeeThumbnail": "https://abc.com"
-  }
-  ```
-  </td>
-    </tr>
-    <tr>
-      <td> 500 </td><td> Internal Server Error <br/>
-  
-  ```json
-  {
-    "message": "Error occurred while retrieving user data: user@wso2.com"
-  }
-  ```
-  </td>
-    </tr>
-    </tr>
-    <tr>
-      <td> 400 </td><td> Bad Request <br/>
-  
-  ```json
-  {
-    "message": "assertion header does not exist!"
-  }
-  ```
-  </td>
-    </tr>
-  </tbody>
-</table>
+## Setup Instructions
 
-### /collections
+### 1. Clone the project
 
-#### GET
-
-##### Summary:
-
-Fetch all the collections based on the filter criteria.
-
-##### Parameters
-
-| Name   | Located in | Description             | Required | Schema |
-| ------ | ---------- | ----------------------- | -------- | ------ |
-| name   | query      | Name of the collection. | No       | string |
-| limit  | query      | Limit for the list.     | No       | int    |
-| offset | query      | Offset for the list.    | No       | int    |
-
-##### Responses
-
-<table>
-  <thead>
-    <tr>
-      <th>Code</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td> 200 </td><td> Ok <br/>
-  
-  ```json
-  {
-    "count": 2,
-    "collections": [
-        {
-            "id": 1,
-            "name": "Collection 1",
-            "createdOn": "2024-07-03 10:19:09.236415",
-            "createdBy": "user@wso2.com",
-            "updatedOn": "2024-07-11 06:10:24.148038",
-            "updatedBy": "user@wso2.com"
-        },
-        {
-            "id": 2,
-            "name": "Collection 2",
-            "createdOn": "2024-07-03 10:19:09.238862",
-            "createdBy": "user@wso2.com",
-            "updatedOn": "2024-07-03 10:19:09.238862",
-            "updatedBy": "user@wso2.com"
-        }
-    ]
-}
-  ```
-  </td>
-    <tr>
-      <td> 500 </td><td> Internal Server Error <br/>
-  
-  ```json
-  {
-    "message": "Error occurred while retrieving user data: user@wso2.com"
-  }
-  ```
-  </td>
-    </tr>
-    </tr>
-    <tr>
-      <td> 400 </td><td> Bad Request <br/>
-  
-  ```json
-  {
-    "message": "assertion header does not exist!"
-  }
-  ```
-  </td>
-    </tr>
-    <tr>
-      <td> 403 </td><td> Forbidden <br/>
-  
-  ```json
-  {
-    "message": "Insufficient privileges!"
-  }
-  ```
-  </td>
-    </tr>
-  </tbody>
-</table>
-
-### /collections
-
-#### POST
-
-##### Summary:
-
-Create a new collection in the system.
-
-##### Parameters
-
-<table>
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Located in</th>
-    <th>Description</th>
-    <th>Required</th>
-    <th>Schema</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>Input</td>
-    <td>Payload</td>
-    <td>Collection create type.</td>
-    <td>Yes</td>
-    <td>
-
-```json
-{
-  "name": "Collection 5"
-}
+```bash
+git clone https://github.com/nimashag/ballerina-user-crud.git
+cd ballerina-user-crud
 ```
+---
 
-  </td>
-    </tr>
-  </tbody>
-</table>
+### 2. Create Config.toml
 
-##### Responses
+- Create a Config.toml in the root with your DB credentials:
+```toml
+[databaseConfig]
+user = "root"
+password = "your_password"
+host = "localhost"
+port = 3306
+database = "user_crud_db"
+```
+---
 
-<table>
-  <thead>
-    <tr>
-      <th>Code</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>201</td>
-      <td>Created<br/>
+### 3. Run the Service
+```bash
+bal run
+```
+---
+
+## API Endpoints
+
+
+| Method  | Endpoint | Description             | 
+| ------ | ---------- | ----------------------- | 
+| GET  | ```/users ```     | Get all users | 
+| GET  | ```/users/{id} ```      | Get one user by ID    | 
+| GET | ```/users/search?name=Alice ```     | Search users by name    | 
+| POST  | ```/users ```     | Create new user | 
+| PATCH  | ```/users/{id} ```     | Update existing user     | 
+| DELETE| ```/users/{id} ```    | Delete user by ID    | 
+
+---
+## Sample POST Body
   
   ```json
   {
-    "id": 6,
-    "name": "Collection 5",
-    "createdOn": "2024-07-11 06:37:03.190918",
-    "createdBy": "user@wso2.com",
-    "updatedOn": "2024-07-11 06:37:03.190918",
-    "updatedBy": "user@wso2.com"
-  }
+  "name": "John Doe",
+  "email": "john@example.com",
+  "address": "123 Main St"
+}
   ```
-  </td>
-    </tr>
-    <tr>
-      <td> 500 </td><td> Internal Server Error <br/>
+---
+
+## Testing
+
+- You can use Postman or curl to test the endpoints.
   
-  ```json
-  {
-    "message": "Error occurred while adding sample collection!"
-  }
+  ```bash
+  curl http://localhost:9090/users
+
   ```
-  </td>
-    </tr>
-    </tr>
-    <tr>
-      <td> 400 </td><td> Bad Request <br/>
-  
-  ```json
-  {
-    "message": "assertion header does not exist!"
-  }
-  ```
-  </td>
-    </tr>
-    <tr>
-      <td> 403 </td><td> Forbidden <br/>
-  
-  ```json
-  {
-    "message": "Insufficient privileges!"
-  }
-  ```
-  </td>
-    </tr>
-  </tbody>
-</table>
+
