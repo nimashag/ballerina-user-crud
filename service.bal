@@ -29,68 +29,89 @@ service / on new http:Listener(9090) {
         return response;
     }
 
+    // Resource function to insert a new user into the database.
     resource function post users(database:UserCreate user) returns http:Created|http:InternalServerError {
+        // Call the insert function with the user payload.
         sql:ExecutionResult|sql:Error response = database:insertUser(user);
+
+        // Handle insertion error.
         if response is error {
             return <http:InternalServerError>{
                 body: "Error while inserting user"
             };
         }
+        // Return HTTP 201 Created on success.
         return http:CREATED;
     }
 
+    // Resource function to delete a user by ID.
     resource function delete users/[int id]() returns http:NoContent|http:InternalServerError {
-     sql:ExecutionResult|sql:Error response = database:deleteUser(id);
+        // Call the delete function with the user ID.
+        sql:ExecutionResult|sql:Error response = database:deleteUser(id);
 
-     if response is error {
-         return <http:InternalServerError>{
-             body: "Error while deleting user"
-         };
-     }
-
-     return http:NO_CONTENT;
-    }
-
-    resource function patch users/[int id](database:UserUpdate user) returns http:NoContent|http:InternalServerError {
-    sql:ExecutionResult|sql:Error response = database:updateUser(id, user);
-
-    if response is error {
-        return <http:InternalServerError>{
-            body: "Error while updating user"
-        };
-    }
-
-    return http:NO_CONTENT;
-    }
-
-    resource function get users/search(@http:Query string name) returns database:User[]|http:InternalServerError {
-    database:User[]|error response = database:searchUserByName(name);
-
-    if response is error {
-        return <http:InternalServerError>{
-            body: "Error while searching user by name"
-        };
-    }
-
-    return response;
-    }
-
-    resource function get users/[int id]() returns database:User|http:NotFound|http:InternalServerError {
-    database:User|error response = database:getUserById(id);
-
-    if response is error {
-        if response.message() == "User not found" {
-            return <http:NotFound>{
-                body: "User not found"
+        // Handle deletion error.
+        if response is error {
+            return <http:InternalServerError>{
+                body: "Error while deleting user"
             };
         }
-        return <http:InternalServerError>{
-            body: "Error retrieving user"
-        };
+
+        // Return HTTP 204 No Content on success.
+        return http:NO_CONTENT;
     }
 
-    return response;
-}
+    // Resource function to update a user by ID.
+    resource function patch users/[int id](database:UserUpdate user) returns http:NoContent|http:InternalServerError {
+        // Call the update function with ID and updated user data.
+        sql:ExecutionResult|sql:Error response = database:updateUser(id, user);
+
+        // Handle update error.
+        if response is error {
+            return <http:InternalServerError>{
+                body: "Error while updating user"
+            };
+        }
+
+        // Return HTTP 204 No Content on success.
+        return http:NO_CONTENT;
+    }
+
+    // Resource function to search users by name using a query parameter.
+    resource function get users/search(@http:Query string name) returns database:User[]|http:InternalServerError {
+        // Call the search function with the name.
+        database:User[]|error response = database:searchUserByName(name);
+
+        // Handle search error.
+        if response is error {
+            return <http:InternalServerError>{
+                body: "Error while searching user by name"
+            };
+        }
+
+        // Return matched users.
+        return response;
+    }
+
+    // Resource function to fetch a single user by ID.
+    resource function get users/[int id]() returns database:User|http:NotFound|http:InternalServerError {
+        // Call the getUserById function with the given ID.
+        database:User|error response = database:getUserById(id);
+
+        // Handle error: differentiate between "not found" and other errors.
+        if response is error {
+            if response.message() == "User not found" {
+                return <http:NotFound>{
+                    body: "User not found"
+                };
+            }
+            return <http:InternalServerError>{
+                body: "Error retrieving user"
+            };
+        }
+
+        // Return the user on success.
+        return response;
+    }
 
 
 }
